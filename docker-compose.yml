@@ -1,0 +1,27 @@
+version: "3.7"
+
+volumes:
+  mysql-data:        # Persist MySQL data.
+
+services:
+  app:
+    image: ambientum/php:7.2-nginx
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "8080:8080"
+      - "8083:8083"
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - 'mysql-data:/var/lib/mysql' # persist "/var/lib/mysql" on volume "mysql-data".
+    ports:
+      - '3306:3306'  # Port 3306 => MySQL TCP interface.
+    environment:
+      - MYSQL_ROOT_PASSWORD=acme  # password for user user root.
+      - MYSQL_DATABASE=acme       # database name (to be created on first run).
+      - MYSQL_USER=acme           # regular user name.
+      - MYSQL_PASSWORD=acme       # regular user password.
+  
